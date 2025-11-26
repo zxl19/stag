@@ -243,26 +243,28 @@ int inverse(double **TB, double **InvB, int N){
 		if (maxpivot >= eps)
 		{
 			if (npivot != k)
+			{
 				for (j = k; j <= 2 * N + 1; j++)
 				{
 					temp = A[npivot][j];
 					A[npivot][j] = A[k][j];
 					A[k][j] = temp;
 				}
+			}
 
-				D = A[k][k];
-				for (j = 2 * N + 1; j >= k; j--)
-					A[k][j] = A[k][j] / D;
+			D = A[k][k];
+			for (j = 2 * N + 1; j >= k; j--)
+				A[k][j] = A[k][j] / D;
 
-				for (i = 1; i <= N; i++)
+			for (i = 1; i <= N; i++)
+			{
+				if (i != k)
 				{
-					if (i != k)
-					{
-						mult = A[i][k];
-						for (j = 2 * N + 1; j >= k; j--)
-							A[i][j] = A[i][j] - mult * A[k][j];
-					}
+					mult = A[i][k];
+					for (j = 2 * N + 1; j >= k; j--)
+						A[i][j] = A[i][j] - mult * A[k][j];
 				}
+			}
 		}
 		else
 		{  // printf("\n The matrix may be singular !!") ;
@@ -284,7 +286,7 @@ int inverse(double **TB, double **InvB, int N){
 	DeallocateMatrix(C, N+1);
 
 	return (0);
-} 
+}
 
 
 void AperB(double **_A, double **_B, double **_res,

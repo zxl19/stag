@@ -164,7 +164,7 @@ namespace {
 			output_rejectedImgPoints->emplace_back(std::move(rejectedImgPoints));
 		}
 
-		// !debug
+		// !debug: draw intermediary steps
 		// *ref: https://github.com/bbenligiray/stag/issues/24
 		// stag_detector.logResults("./");
 	}

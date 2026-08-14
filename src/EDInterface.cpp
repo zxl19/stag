@@ -18,6 +18,12 @@ void EDInterface::runEDPFandEDLines(const cv::Mat &image)
 		delete edgeMap;
 
 	edLines = DetectLinesByEDPF(edgeMap, image.data, image.size().width, image.size().height, false, 0);
+	// !debug: print elapsed time
+	// std::cout << "edLines->edgeDetectionTime: " << edLines->edgeDetectionTime << std::endl;
+	// std::cout << "edLines->lineFitTime: " << edLines->lineFitTime << std::endl;
+	// std::cout << "edLines->joinLineSegmentsTime: " << edLines->joinLineSegmentsTime << std::endl;
+	// std::cout << "edLines->lineValidationTime: " << edLines->lineValidationTime << std::endl;
+	// std::cout << "edLines->LUTComputationTime: " << edLines->LUTComputationTime << std::endl;
 }
 
 

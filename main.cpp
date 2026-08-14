@@ -29,6 +29,8 @@ int main() {
 
   // draw and save results
   stag::drawDetectedMarkers(image, corners, ids);
+  // !debug: draw rejected corners
+  // stag::drawDetectedMarkers(image, rejectedImgPoints);
   cv::imwrite("example_result.jpg", image);
 
   // *这里的相机内参、畸变系数、边长等仅用于验证接口
@@ -47,13 +49,14 @@ int main() {
     if (corners[i].size() != 4) {
       continue;
     }
-    // !STag的坐标系原点定义在左上角，stag::detectMarkers检测出的角点是有序的
-    // !从原点开始，俯视图下逆时针方向，世界坐标系中的角点坐标顺序需要与像素坐标系中的角点坐标顺序一致
+    // !STag的坐标系原点定义在黑色部分有标记的那个角，记为左上角
+    // !stag::detectMarkers检测出的角点是有序的，从原点开始，俯视图下顺时针方向
+    // !世界坐标系中的角点坐标顺序需要与像素坐标系中的角点坐标顺序一致
     std::vector<cv::Point3f> Pw;
     Pw.emplace_back(cv::Point3f{0, 0, 0});
-    Pw.emplace_back(cv::Point3f{0, edge_length, 0});
-    Pw.emplace_back(cv::Point3f{edge_length, edge_length, 0});
     Pw.emplace_back(cv::Point3f{edge_length, 0, 0});
+    Pw.emplace_back(cv::Point3f{edge_length, edge_length, 0});
+    Pw.emplace_back(cv::Point3f{0, edge_length, 0});
     std::vector<cv::Point2f> Puv;
     for (std::size_t j = 0; j < corners[i].size(); ++j) {
       std::cout << "Corner " << j << " at " << corners[i][j] << std::endl;
@@ -62,12 +65,10 @@ int main() {
     // !Pc = Rcw * Pw + tcw
     cv::Mat rvec, tvec;
     cv::solvePnP(Pw, Puv, cameraMatrix, distCoeffs, rvec, tvec);
-    std::cout << "rvec: " << rvec << std::endl;
-    std::cout << "tvec: " << tvec << std::endl;
     // todo：测试这个接口
     // cv::solvePnPRansac(Pw, Puv, cameraMatrix, distCoeffs, rvec, tvec);
-    // std::cout << "rvec: " << rvec << std::endl;
-    // std::cout << "tvec: " << tvec << std::endl;
+    std::cout << "rvec: " << rvec << std::endl;
+    std::cout << "tvec: " << tvec << std::endl;
   }
 
   return 0;
